@@ -1,6 +1,6 @@
 <template>
   <div class="item">
-    <i>
+    <i class="icon">
       <slot name="icon"></slot>
     </i>
     <div class="details">
@@ -24,13 +24,17 @@
   margin-left: 1rem;
 }
 
+.icon{
+  background: lightgoldenrodyellow;
+}
+
 i {
   display: flex;
   place-items: center;
   place-content: center;
   width: 32px;
   height: 32px;
-
+  background: yellow;
   color: var(--color-text);
 }
 

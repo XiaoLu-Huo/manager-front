@@ -5,12 +5,20 @@ import ToolingIcon from './icons/IconTooling.vue'
 import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
+import {
+  Check,
+  Delete,
+  Edit,
+  Message,
+  Search,
+  Star,
+} from '@element-plus/icons-vue'
 </script>
 
 <template>
   <WelcomeItem>
     <template #icon>
-      <DocumentationIcon />
+      <el-icon><House style="width: 24px; height: 24px;"/></el-icon>
     </template>
     <template #heading>Documentation</template>
 
@@ -84,3 +92,16 @@ import SupportIcon from './icons/IconSupport.vue'
     <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
   </WelcomeItem>
 </template>
+
+<style lang="scss">
+.el-icon{
+  width: 50px;
+  height: 50px;
+}
+//.el-icon:deep{
+//  svg{
+//    width: 50px;
+//    height: 50px;
+//  }
+//}
+</style>
