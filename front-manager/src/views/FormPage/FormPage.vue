@@ -4,17 +4,35 @@
       <el-header class="layout-header">用户储蓄管理系统</el-header>
       <el-container class="layout-inner">
         <el-aside class="layout-aside">
-          <el-tree
-              :data="data"
-              :props="defaultProps"
-              accordion
-              @node-click="handleNodeClick"
-              :default-expanded-keys="[5]"
-          />
+          <h3 class="mb-2">目 录</h3>
+          <el-menu
+              default-active="2-1"
+              class="el-menu-vertical-demo"
+              @open="handleOpen"
+              @close="handleClose"
+          >
+            <el-sub-menu index="1">
+              <template #title>
+                <el-icon>
+                  <icon-menu/>
+                </el-icon>
+                <span>储户信息</span>
+              </template>
+              <el-menu-item index="1-1"><router-link to="/form/user">储户列表</router-link></el-menu-item>
+            </el-sub-menu>
+            <el-sub-menu index="2">
+              <template #title>
+                <el-icon>
+                  <icon-menu/>
+                </el-icon>
+                <span>单据信息</span>
+              </template>
+              <el-menu-item index="2-1"><router-link to="/form/receipt">单据列表</router-link></el-menu-item>
+            </el-sub-menu>
+          </el-menu>
         </el-aside>
-
         <el-main class="layout-main">
-          hhhhhh
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -22,48 +40,18 @@
 </template>
 
 <script lang="ts" setup>
-interface Tree {
-  id: number
-  label: string
-  children?: Tree[]
+import {
+  Document,
+  Menu as IconMenu,
+  Location,
+  Setting,
+} from '@element-plus/icons-vue'
+
+const handleOpen = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
 }
-
-const handleNodeClick = (data: Tree) => {
-  console.log(data)
-
-}
-
-const data: Tree[] = [
-  {
-    id: 1,
-    label: '目录',
-    children: [
-      {
-        id: 2,
-        label: '储户信息',
-        children: [
-          {
-            id: 4,
-            label: '储户列表',
-          },
-        ],
-      },
-      {
-        id: 3,
-        label: '单据信息',
-        children: [
-          {
-            id: 5,
-            label: '单据列表',
-          },
-        ],
-      }
-    ]
-  },
-]
-const defaultProps = {
-  children: 'children',
-  label: 'label',
+const handleClose = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
 }
 </script>
 
@@ -71,8 +59,8 @@ const defaultProps = {
 .common-layout {
   width: 100%;
   height: 100vh;
-  background: #1c92d2;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #f2fcfe, #1c92d2);  /* Chrome 10-25, Safari 5.1-6 */
+  background: #1c92d2; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #f2fcfe, #1c92d2); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #f2fcfe, #1c92d2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 
@@ -120,11 +108,26 @@ const defaultProps = {
     display: flex;
     justify-content: center;
     align-items: center;
+    //background-color: white;
   }
 
   .el-tree {
     background: transparent;
   }
+
+  .el-menu-vertical-demo {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .el-menu-item {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .el-menu-item.is-active {
+    color: #1c92d2;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
 }
 
 </style>
