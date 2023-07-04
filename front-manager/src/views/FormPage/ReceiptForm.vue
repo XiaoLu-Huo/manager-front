@@ -41,11 +41,27 @@
       <el-table-column prop="endTime" label="存款到期时间" width="200"/>
       <el-table-column prop="term" label="存期(月)" width="150"/>
     </el-table>
+
+    <div style = "margin: 10px 0">
+      <el-pagination
+          background
+          v-model:current-page="pageNumber"
+          v-model:page-size="pageSize"
+          :page-sizes="[2, 5, 10, 20]"
+          layout="total, prev, pager, next, sizes"
+          :total="totalNumber"
+          @size-change="onSubmit"
+          @current-change="onSubmit"
+      />
+    </div>
+
   </section>
 </template>
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import axios from "axios";
+import Pagination from '@/components/Pagination'
+import {isNumber} from "element-plus/es/utils";
 
 const formInline = reactive({
   name: '',
@@ -53,6 +69,11 @@ const formInline = reactive({
   endTimeFrom: '',
   endTimeTo: '',
 })
+
+const totalNumber = ref(3)
+const pageNumber = ref(1)
+const pageSize = ref(5)
+
 const tableData =ref([]);
 
 const getReceiptList = (value, pageNumber: number, pageSize: number) => {
@@ -66,6 +87,7 @@ const getReceiptList = (value, pageNumber: number, pageSize: number) => {
   }).then(res => {
     console.log('res', res.data);
     tableData.value = res.data.list;
+    totalNumber.value = res.data.total;
   })
 }
 getReceiptList({
@@ -73,11 +95,11 @@ getReceiptList({
   "idCard": '',
   "endTimeFrom": '',
   "endTimeTo": '',
-},1,10);
+},pageNumber.value, pageSize.value);
 
 const onSubmit = () => {
   console.log('submit!', formInline)
-  getReceiptList(formInline,1,10);
+  getReceiptList(formInline, pageNumber.value, pageSize.value);
 }
 
 </script>
@@ -114,4 +136,10 @@ const onSubmit = () => {
     text-align: center;
   }
 
+  .demo-pagination-block + .demo-pagination-block {
+    margin-top: 10px;
+  }
+  .demo-pagination-block .demonstration {
+    margin-bottom: 16px;
+  }
 </style>
