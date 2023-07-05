@@ -28,7 +28,49 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">Query</el-button>
+        <el-button type="primary" round :icon="Search" @click="onSubmit">查询</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="success" color="#626aef" round :icon="Edit" @click="onSubmit">重置</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="success" color = "green" round :icon="Edit" @click="dialogFormVisible = true">
+          创建存单
+        </el-button>
+        <el-dialog v-model="dialogFormVisible" title="创建存单">
+          <el-form :model="createReceipt">
+            <el-form-item label="姓名">
+              <el-input v-model="createReceipt.name" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="身份证号码">
+              <el-input v-model="createReceipt.idCard" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="金额(CNY)">
+              <el-input v-model="createReceipt.amount" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="存期(月)">
+              <el-input v-model="createReceipt.term" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="存期开始时间">
+              <el-date-picker
+                  v-model="createReceipt.startTime"
+                  type="date"
+                  placeholder="存期开始时间"
+                  clearable
+                  format="YYYY-MM-DD"
+                  value-format="YYYY/MM/DD 00:00:00"
+              />
+            </el-form-item>
+          </el-form>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取消</el-button>
+              <el-button type="primary" @click="dialogFormVisible = false">
+                提交
+              </el-button>
+            </span>
+          </template>
+        </el-dialog>
       </el-form-item>
     </el-form>
 
@@ -42,7 +84,7 @@
       <el-table-column prop="term" label="存期(月)" width="150"/>
     </el-table>
 
-    <div style = "margin: 10px 0">
+    <div style = "margin: 10px 0" class = "page-right">
       <el-pagination
           background
           v-model:current-page="pageNumber"
@@ -60,8 +102,7 @@
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import axios from "axios";
-import Pagination from '@/components/Pagination'
-import {isNumber} from "element-plus/es/utils";
+import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
 
 const formInline = reactive({
   name: '',
@@ -70,11 +111,20 @@ const formInline = reactive({
   endTimeTo: '',
 })
 
+const createReceipt = reactive({
+  userName: '',
+  startTime: '',
+  term: '',
+  amount: 0,
+  idCard: '',
+})
+
 const totalNumber = ref(3)
 const pageNumber = ref(1)
-const pageSize = ref(5)
-
+const pageSize = ref(10)
 const tableData =ref([]);
+const dialogFormVisible = ref(false)
+const formLabelWidth = '140px'
 
 const getReceiptList = (value, pageNumber: number, pageSize: number) => {
   axios.post('http://localhost:8080/receipt/list', {
@@ -141,5 +191,12 @@ const onSubmit = () => {
   }
   .demo-pagination-block .demonstration {
     margin-bottom: 16px;
+  }
+
+  .page-right {
+    display: flex;
+    justify-content: right;
+    align-items: normal;
+    padding: 10px 0;
   }
 </style>
