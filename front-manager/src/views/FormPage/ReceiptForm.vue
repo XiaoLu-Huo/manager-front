@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+    <el-form ref="formRef" :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="姓名">
         <el-input v-model="formInline.name" placeholder="姓名" clearable/>
       </el-form-item>
@@ -31,13 +31,13 @@
         <el-button type="primary" round :icon="Search" @click="onSubmit">查询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" color="#626aef" round :icon="Edit" @click="onSubmit">重置</el-button>
+        <el-button type="success" color="#626aef" round :icon="Edit" @click="resetForm(formRef)">重置</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" color = "green" round :icon="Edit" @click="dialogFormVisible = true">
+        <el-button type="success" color = "green" round :icon="Edit" @click="handleCreateReceipt">
           创建存单
         </el-button>
-        <el-dialog v-model="dialogFormVisible" title="创建存单">
+        <el-dialog v-model="dialogFormVisible" title="创建存单" width = "35%">
           <el-form :model="createReceipt">
             <el-form-item label="姓名">
               <el-input v-model="createReceipt.name" autocomplete="off" />
@@ -65,9 +65,7 @@
           <template #footer>
             <span class="dialog-footer">
               <el-button @click="dialogFormVisible = false">取消</el-button>
-              <el-button type="primary" @click="dialogFormVisible = false">
-                提交
-              </el-button>
+              <el-button type="primary" @click="submitCreateReceipt">提交</el-button>
             </span>
           </template>
         </el-dialog>
@@ -75,13 +73,20 @@
     </el-form>
 
     <el-table :data="tableData" style="width: 1400px; height: 600px;">
-      <el-table-column fixed prop="name" label="姓名" width="180"/>
-      <el-table-column prop="code" label="单号" width="180"/>
-      <el-table-column prop="idCard" label="身份证号码" width="300"/>
-      <el-table-column prop="amount" label="存款金额(CNY)" width="200"/>
+      <el-table-column fixed prop="name" label="姓名" width="150"/>
+      <el-table-column prop="code" label="单号" width="150"/>
+      <el-table-column prop="idCard" label="身份证号码" width="240"/>
+      <el-table-column prop="amount" label="存款金额(CNY)" width="150"/>
       <el-table-column prop="startTime" label="存款开始时间" width="200"/>
       <el-table-column prop="endTime" label="存款到期时间" width="200"/>
-      <el-table-column prop="term" label="存期(月)" width="150"/>
+      <el-table-column prop="term" label="存期(月)" width="100"/>
+      <el-table-column prop="id" label="id" width="100" v-if="showAgeColumn"/>
+      <el-table-column fixed="right" label="操作" width="180">
+        <template #default = "scope">
+          <el-button link type="primary" @click="handleUpdateReceipt(scope.row, scope.$index)">更新</el-button>
+          <el-button link type="primary" @click="handleQueryReceipt(scope.$index)">查看详情</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <div style = "margin: 10px 0" class = "page-right">
@@ -103,6 +108,7 @@
 import {reactive, ref} from 'vue'
 import axios from "axios";
 import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
+import type {FormInstance} from "element-plus";
 
 const formInline = reactive({
   name: '',
@@ -111,8 +117,8 @@ const formInline = reactive({
   endTimeTo: '',
 })
 
-const createReceipt = reactive({
-  userName: '',
+let createReceipt = reactive({
+  name: '',
   startTime: '',
   term: '',
   amount: 0,
@@ -125,13 +131,16 @@ const pageSize = ref(10)
 const tableData =ref([]);
 const dialogFormVisible = ref(false)
 const formLabelWidth = '140px'
+const showAgeColumn = ref(false)
+const globalIndex = ref(-1)
+const formRef = ref<FormInstance>()
 
 const getReceiptList = (value, pageNumber: number, pageSize: number) => {
   axios.post('http://localhost:8080/receipt/list', {
     "name": value.name,
     "idCard": value.idCard,
-    "endTimeFrom": value.startTime,
-    "endTimeTo": value.endTime,
+    "endTimeFrom": value.endTimeFrom,
+    "endTimeTo": value.endTimeTo,
     "pageNumber": pageNumber,
     "pageSize": pageSize
   }).then(res => {
@@ -150,6 +159,53 @@ getReceiptList({
 const onSubmit = () => {
   console.log('submit!', formInline)
   getReceiptList(formInline, pageNumber.value, pageSize.value);
+}
+
+// const reset = () => {
+//   getReceiptList(formInline, pageNumber.value, pageSize.value);
+// }
+const resetForm = (formEl: FormInstance | undefined) => {
+  console.log(formRef);
+  if (!formEl) return
+  formEl.resetFields()
+}
+
+// 创建存单数据
+const handleCreateReceipt = () => {
+  // 将弹窗历史数据置空
+  createReceipt = reactive({
+    name: '',
+    startTime: '',
+    term: '',
+    amount: 0,
+    idCard: '',
+  })
+  // 打开弹窗
+  dialogFormVisible.value = true
+
+}
+
+// 保存并提交存单数据
+const submitCreateReceipt = () => {
+  console.log("create receipt !!!", createReceipt)
+  dialogFormVisible.value = false
+// TODO 需要发请求将数据提交到db 提交时需要判断globalIndex是否大于0，是则走更新接口，否则走创建接口
+  if (globalIndex >= 0) {
+    // 更新操作，走更新接口
+    globalIndex.value = -1
+  } else {
+    // 创建操作，走创建接口
+  }
+  getReceiptList(formInline, pageNumber.value, pageSize.value);
+}
+
+// 更新存单数据，在点击时需要将当前行的数据填充到表单中
+const handleUpdateReceipt = (row, index) => {
+  createReceipt = Object.assign({}, row)
+  globalIndex.value = index
+  console.log(globalIndex.value)
+  console.log("update receipt !!!", createReceipt)
+  dialogFormVisible.value = true
 }
 
 </script>
