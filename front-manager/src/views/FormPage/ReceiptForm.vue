@@ -31,7 +31,7 @@
         <el-button type="primary" round :icon="Search" @click="onSubmit">查询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" color="#626aef" round :icon="Edit" @click="resetForm(formRef)">重置</el-button>
+        <el-button type="success" color="#626aef" round :icon="Edit" @click="reset">重置</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="success" color = "green" round :icon="Edit" @click="handleCreateReceipt">
@@ -161,13 +161,12 @@ const onSubmit = () => {
   getReceiptList(formInline, pageNumber.value, pageSize.value);
 }
 
-// const reset = () => {
-//   getReceiptList(formInline, pageNumber.value, pageSize.value);
-// }
-const resetForm = (formEl: FormInstance | undefined) => {
-  console.log(formRef);
-  if (!formEl) return
-  formEl.resetFields()
+const reset = () => {
+  formInline.name = ''
+  formInline.idCard = ''
+  formInline.endTimeFrom = ''
+  formInline.endTimeTo = ''
+  getReceiptList(formInline, pageNumber.value, pageSize.value);
 }
 
 // 创建存单数据
@@ -237,9 +236,11 @@ const handleUpdateReceipt = (row, index) => {
     height: 35px;
     font-family: "Times New Roman", cursive;
     font-weight: normal;
-    font-size: 18px;
     padding: 10px 10px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .demo-pagination-block + .demo-pagination-block {
