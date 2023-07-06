@@ -70,7 +70,8 @@ const handleClose = (key: string, keyPath: string[]) => {
   }
 
   .layout-inner {
-    height: 80vh;
+    height: 90vh;
+    width: 100%;
   }
 
   .layout-header {
@@ -108,6 +109,10 @@ const handleClose = (key: string, keyPath: string[]) => {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 80%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
     //background-color: white;
   }
 
