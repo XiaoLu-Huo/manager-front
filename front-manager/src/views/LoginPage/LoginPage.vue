@@ -95,7 +95,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       //   type: 'success',
       // })
       router.push({
-        name: 'form',
+        name: 'receipt-list',
       })
       console.log('submit!', ruleForm)
     } else {
