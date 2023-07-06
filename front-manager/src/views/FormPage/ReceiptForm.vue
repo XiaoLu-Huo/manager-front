@@ -242,15 +242,15 @@ const handleUpdateReceipt = (row, index) => {
   flex-direction: column;
 }
 
-//.create-receipt-form-dialog {
-//  width: 35%;
-//  min-width: 500px;
-//
-//  .el-form-item__label {
-//    color: black;
-//    width: 200px;
-//  }
-//}
+.create-receipt-form-dialog {
+  width: 35%;
+  min-width: 500px;
+
+  .el-form-item__label {
+    color: black;
+    width: 200px;
+  }
+}
 
 .el-form-item__label {
   display: inline-flex;
