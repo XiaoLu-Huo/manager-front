@@ -31,7 +31,7 @@
         <el-button type="primary" round :icon="Search" @click="onSubmit">查询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" color="#626aef" round :icon="Edit" @click="reset">重置</el-button>
+        <el-button type="success" color="#626aef" round :icon="Refresh" @click="reset">重置</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="success" color="green" round :icon="Edit" @click="handleCreateReceipt">
@@ -137,6 +137,7 @@
 import {reactive, ref} from 'vue'
 import axios from "axios";
 import type {FormInstance, FormRules} from "element-plus";
+import { Delete, Edit, Search, Share, Upload, Refresh } from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
 
 const ruleFormRef = ref<FormInstance>()
