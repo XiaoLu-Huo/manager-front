@@ -84,7 +84,7 @@
       <el-table-column fixed="right" label="操作" width="180">
         <template #default="scope">
           <el-button link type="primary" @click="handleUpdateReceipt(scope.row, scope.$index)">更新</el-button>
-          <el-button link type="primary" @click="handleQueryReceipt(scope.$index)">查看详情</el-button>
+<!--          <el-button link type="primary" @click="handleQueryReceipt(scope.$index)">查看详情</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -105,7 +105,7 @@
   </section>
 </template>
 <script lang="ts" setup>
-import {reactive, ref, toRef} from 'vue'
+import {reactive, ref} from 'vue'
 import axios from "axios";
 import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
 import type {FormInstance} from "element-plus";
@@ -135,7 +135,6 @@ const pageSize = ref(10)
 const tableData = ref([]);
 const dialogFormVisible = ref(false)
 const showAgeColumn = ref(false)
-const globalIndex = ref(-1)
 const formRef = ref<FormInstance>()
 
 const getReceiptList = (value, pageNumber: number, pageSize: number) => {
