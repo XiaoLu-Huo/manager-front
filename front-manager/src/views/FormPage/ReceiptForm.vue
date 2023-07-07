@@ -38,20 +38,49 @@
           创建存单
         </el-button>
         <el-dialog v-model="dialogFormVisible" title="创建存单" class="create-receipt-form-dialog">
-          <el-form :model="createReceipt">
-            <el-form-item label="姓名">
+          <el-form :model="createReceipt" ref="ruleFormRef" :rules="rules">
+            <el-form-item label="姓名" prop="name"
+                          :inline-message = "true"
+                          :rules="[{ required: true, message: '姓名不能为空', trigger: ['blur'] },]"
+            >
               <el-input v-model="createReceipt.name" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="身份证号码">
+            <el-form-item label="身份证号码" prop="idCard"
+                          :inline-message = "true"
+                          :rules="[
+                              // {
+                              //   required: true,
+                              //   pattern: /^[1-9]\d{5}(19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
+                              //   message: '身份证号码格式不正确',
+                              //   trigger: 'blur',
+                              // },
+                              { min: 18, max: 18, message: '身份证号码长度不正确', trigger: ['blur'] },
+                              ]"
+            >
               <el-input v-model="createReceipt.idCard" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="金额(CNY)">
-              <el-input v-model="createReceipt.amount" autocomplete="off"/>
+            <el-form-item label="金额(CNY)" prop="amount"
+                          :inline-message = "true"
+                          :rules="[
+                              {required: true, type: 'number', message: '金额为数字，且不为空', trigger: ['blur']},
+                          ]"
+            >
+              <el-input v-model.number="createReceipt.amount" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="存期(月)">
+            <el-form-item label="存期(月)" prop="term"
+                          :inline-message = "true"
+                          :rules="[
+                              { required: true, type: 'number', message: '期限为数字且不能为空', trigger: ['blur'] },
+                          ]"
+            >
               <el-input v-model="createReceipt.term" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="存期开始时间">
+            <el-form-item label="存期开始时间" prop="startTime"
+                          :inline-message = "true"
+                          :rules="[
+                              { required: true, message: '请选择存款日期', trigger: ['blur']},
+                          ]"
+            >
               <el-date-picker
                   v-model="createReceipt.startTime"
                   type="date"
@@ -107,9 +136,10 @@
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import axios from "axios";
-import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
-import type {FormInstance} from "element-plus";
-import { ElMessage } from 'element-plus'
+import type {FormInstance, FormRules} from "element-plus";
+import {ElMessage} from 'element-plus'
+
+const ruleFormRef = ref<FormInstance>()
 
 const formInline = reactive({
   name: '',
@@ -118,7 +148,16 @@ const formInline = reactive({
   endTimeTo: '',
 })
 
-let createReceipt = reactive(
+interface CreateReceipt {
+  id: undefined,
+  name: undefined,
+  startTime: undefined,
+  term: undefined,
+  amount: undefined,
+  idCard: undefined,
+}
+
+let createReceipt = reactive<CreateReceipt>(
     {
       id: undefined,
       name: undefined,
@@ -178,7 +217,7 @@ const reset = () => {
 // 创建存单数据
 const handleCreateReceipt = () => {
   // 将弹窗历史数据置空
-  createReceipt = reactive({
+  createReceipt = reactive<CreateReceipt>({
     id: undefined,
     name: undefined,
     startTime: undefined,
@@ -194,7 +233,7 @@ const handleCreateReceipt = () => {
 // 保存并提交存单数据
 const submitCreateReceipt = () => {
 // // TODO 需要发请求将数据提交到db 提交时需要判断globalIndex是否大于0，是则走更新接口，否则走创建接口
-  if (createReceipt && createReceipt.id !== '') {
+  if (createReceipt && createReceipt.id !== undefined) {
     console.log("修改数据 ~~~", createReceipt)
     // 更新操作，走更新接口
     axios.post("http://localhost:8080/receipt/update", createReceipt)
