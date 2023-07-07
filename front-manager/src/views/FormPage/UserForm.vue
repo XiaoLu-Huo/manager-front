@@ -1,61 +1,62 @@
 <template>
-  <div>
-    <!-- 面包屑导航区域 -->
+  敬请期待～
+<!--  <div>-->
+<!--    &lt;!&ndash; 面包屑导航区域 &ndash;&gt;-->
 
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
-    <!-- 卡片视图区域 -->
-    <el-card>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <!-- 搜索与添加区域 -->
-          <el-input placeholder="请输入内容"
-                    v-model="queryInfo.query" clearable @clear="getUserList">
-            <template #append>
-              <el-button @click="getUserList"><el-icon><search /></el-icon></el-button>
-            </template>
-          </el-input>
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary">添加用户</el-button>
-        </el-col>
-      </el-row>
-      <!-- 用户列表区域  -->
-      <el-table :data="userlist" border stripe>
-        <el-table-column type="index"></el-table-column>
-        <el-table-column label="姓名" prop="username"></el-table-column>
-        <el-table-column label="邮箱" prop="email"></el-table-column>
-        <el-table-column label="电话" prop="mobile"></el-table-column>
-        <el-table-column label="角色" prop="role_name"></el-table-column>
-        <el-table-column label="状态" prop="mg_state">
-          <template v-slot="scope">
-            <el-switch v-model="scope.row.mg_state" @change="userStateChanged(scope.row)" />
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="180px">
-          <template v-slot="scope">
-            <!-- 修改按钮 -->
-            <el-button type="primary" v-model="scope.row.Id" size="mini"><el-icon><edit /></el-icon></el-button>
-            <!-- 删除按钮 -->
-            <el-button type="danger" size="mini"><el-icon><delete /></el-icon></el-button>
-            <!-- 分配角色按钮 -->
-            <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" size="mini"><el-icon><setting /></el-icon></el-button>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- 页面区域 -->
-      <el-pagination :current-page="queryInfo.pagenum" :page-sizes="[1, 2, 5, 10]"
-                     :page-size="queryInfo.pagesize" layout="total, sizes, prev, pager, next, jumper"
-                     :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange"
-      >
-      </el-pagination>
-    </el-card>
-  </div>
+<!--    <el-breadcrumb separator-class="el-icon-arrow-right">-->
+<!--      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>-->
+<!--      <el-breadcrumb-item>用户管理</el-breadcrumb-item>-->
+<!--      <el-breadcrumb-item>用户列表</el-breadcrumb-item>-->
+<!--    </el-breadcrumb>-->
+<!--    &lt;!&ndash; 卡片视图区域 &ndash;&gt;-->
+<!--    <el-card>-->
+<!--      <el-row :gutter="20">-->
+<!--        <el-col :span="8">-->
+<!--          &lt;!&ndash; 搜索与添加区域 &ndash;&gt;-->
+<!--          <el-input placeholder="请输入内容"-->
+<!--                    v-model="queryInfo.query" clearable @clear="getUserList">-->
+<!--            <template #append>-->
+<!--              <el-button @click="getUserList"><el-icon><search /></el-icon></el-button>-->
+<!--            </template>-->
+<!--          </el-input>-->
+<!--        </el-col>-->
+<!--        <el-col :span="4">-->
+<!--          <el-button type="primary">添加用户</el-button>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
+<!--      &lt;!&ndash; 用户列表区域  &ndash;&gt;-->
+<!--      <el-table :data="userlist" border stripe>-->
+<!--        <el-table-column type="index"></el-table-column>-->
+<!--        <el-table-column label="姓名" prop="username"></el-table-column>-->
+<!--        <el-table-column label="邮箱" prop="email"></el-table-column>-->
+<!--        <el-table-column label="电话" prop="mobile"></el-table-column>-->
+<!--        <el-table-column label="角色" prop="role_name"></el-table-column>-->
+<!--        <el-table-column label="状态" prop="mg_state">-->
+<!--          <template v-slot="scope">-->
+<!--            <el-switch v-model="scope.row.mg_state" @change="userStateChanged(scope.row)" />-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column label="操作" width="180px">-->
+<!--          <template v-slot="scope">-->
+<!--            &lt;!&ndash; 修改按钮 &ndash;&gt;-->
+<!--            <el-button type="primary" v-model="scope.row.Id" size="mini"><el-icon><edit /></el-icon></el-button>-->
+<!--            &lt;!&ndash; 删除按钮 &ndash;&gt;-->
+<!--            <el-button type="danger" size="mini"><el-icon><delete /></el-icon></el-button>-->
+<!--            &lt;!&ndash; 分配角色按钮 &ndash;&gt;-->
+<!--            <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">-->
+<!--              <el-button type="warning" size="mini"><el-icon><setting /></el-icon></el-button>-->
+<!--            </el-tooltip>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--      </el-table>-->
+<!--      &lt;!&ndash; 页面区域 &ndash;&gt;-->
+<!--      <el-pagination :current-page="queryInfo.pagenum" :page-sizes="[1, 2, 5, 10]"-->
+<!--                     :page-size="queryInfo.pagesize" layout="total, sizes, prev, pager, next, jumper"-->
+<!--                     :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange"-->
+<!--      >-->
+<!--      </el-pagination>-->
+<!--    </el-card>-->
+<!--  </div>-->
 </template>
 
 <script >
