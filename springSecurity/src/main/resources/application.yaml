@@ -1,0 +1,7 @@
+server:
+  port: 9090 # 服务启动的端口号
+spring:
+  security:
+    user:
+      name: admin
+      password: admin123 # 配置文件的形式自定义登陆的用户名和密码（内存方式）
