@@ -8,6 +8,6 @@ public class LoginController {
 
   @RequestMapping("/hello")
   public String hello(){
-    return "hello";
+    return "欢迎来到登陆页面";
   }
 }
