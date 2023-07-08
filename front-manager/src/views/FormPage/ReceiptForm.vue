@@ -1,5 +1,12 @@
 <template>
   <section class="receipt-form-section">
+    <div>
+      <br/>
+      <p class = "receipt-text" >
+          此页面为保存了用户的存单信息，可以根据用户名字、身份证号、存款到期日范围进行查询
+      </p>
+      <br/>
+    </div>
     <el-form ref="formRef" :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="姓名">
         <el-input v-model="formInline.name" placeholder="姓名" clearable/>
@@ -272,6 +279,13 @@ const handleUpdateReceipt = (row, index) => {
 </script>
 
 <style lang="scss">
+
+.receipt-text {
+  color: #5151e8;
+  font-size: 25px;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  //padding: 10px 0;
+}
 
 .receipt-form-section {
   width: 100%;
