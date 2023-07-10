@@ -27,8 +27,8 @@
               :size="formSize"
               status-icon
           >
-            <el-form-item label="用户名" prop="name">
-              <el-input class="name-password" v-model="ruleForm.name"/>
+            <el-form-item label="用户名" prop="userName">
+              <el-input class="name-password" v-model="ruleForm.userName"/>
             </el-form-item>
             <el-form-item label="密码" prop="password">
               <el-input class="name-password" v-model="ruleForm.password"/>
@@ -52,23 +52,26 @@ import {useRouter} from "vue-router";
 import back from "../../photo/background.png";
 import back2 from "../../photo/background1.jpeg";
 import back3 from "../../photo/background2.jpeg";
-
+import axios from "axios";
+import request from "@/utils/request";
+import {ElMessage} from "element-plus";
+import {setToken} from "@/utils/token";
 const router = useRouter();
 
 interface RuleForm {
-  name: string
+  userName: string
   password: string
 }
 
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
-  name: '',
+  userName: '',
   password: '',
 })
 
 const rules = reactive<FormRules<RuleForm>>({
-  name: [
+  userName: [
     {required: true, message: '请输入用户名', trigger: 'blur'},
     {min: 3, max: 8, message: '用户名长度为3-8位', trigger: 'blur'},
   ],
@@ -90,14 +93,21 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      // ElMessage({
-      //   message: 'Congrats, this is a success message.',
-      //   type: 'success',
-      // })
-      router.push({
-        name: 'receipt-list',
-      })
-      console.log('submit!', ruleForm)
+      request.post("/login", ruleForm)
+          .then(res => {
+            if (res.data !== '') {
+              console.log("token!", res.data)
+              router.push({
+                name: 'receipt-list',
+              })
+              setToken(res.data)
+              ElMessage.success("登陆成功")
+              console.log('submit!', ruleForm)
+            } else {
+              ElMessage.error("用户名或者密码错误，请重新输入")
+              console.log('请登录!', fields)
+            }
+          })
     } else {
       console.log('error submit!', fields)
     }

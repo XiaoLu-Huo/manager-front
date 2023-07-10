@@ -95,6 +95,7 @@ import axios from "axios";
 import type {FormInstance, FormRules} from "element-plus";
 import { Delete, Edit, Search, Share, Upload, Refresh } from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
+import request from "@/utils/request";
 
 const ruleFormRef = ref<FormInstance>()
 
@@ -129,7 +130,7 @@ const showAgeColumn = ref(false)
 const formRef = ref<FormInstance>()
 
 const getUserList = (value, pageNumber: number, pageSize: number) => {
-  axios.post('http://localhost:8080/user/list', {
+  request.post('/user/list', {
     "name": value.name,
     "pageNumber": pageNumber,
     "pageSize": pageSize
@@ -178,7 +179,7 @@ const submitCreateUser = () => {
   if (createUser && createUser.id !== undefined) {
     console.log("修改数据 ~~~", createUser)
     // 更新操作，走更新接口
-    axios.post("http://localhost:8080/user/update", createUser)
+    request.post("/user/update", createUser)
         .then(res => {
           console.log("更新成功", res.data)
           dialogFormVisible.value = false
@@ -188,7 +189,7 @@ const submitCreateUser = () => {
   } else {
     // 创建操作，走创建接口
     console.log("新增数据 !!!", createUser)
-    axios.post("http://localhost:8080/user/create", createUser)
+    request.post("/user/create", createUser)
         .then(res => {
           dialogFormVisible.value = false
           getUserList(formInline, pageNumber.value, pageSize.value);
