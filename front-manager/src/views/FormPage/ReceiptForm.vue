@@ -64,7 +64,7 @@
                               { min: 18, max: 18, message: '身份证号码长度不正确', trigger: ['blur'] },
                               ]"
             >
-              <el-input v-model="createReceipt.idCard" autocomplete="off"/>
+              <el-input v-model="createReceipt.idCard" autocomplete="off" maxlength="18"/>
             </el-form-item>
             <el-form-item label="金额(CNY)" prop="amount"
                           :inline-message = "true"
@@ -80,7 +80,7 @@
                               { required: true, type: 'number', message: '期限为数字且不能为空', trigger: ['blur'] },
                           ]"
             >
-              <el-input v-model="createReceipt.term" autocomplete="off"/>
+              <el-input v-model.number="createReceipt.term" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="存期开始时间" prop="startTime"
                           :inline-message = "true"
@@ -142,10 +142,10 @@
 </template>
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
-import type {FormInstance, FormRules} from "element-plus";
-import { Delete, Edit, Search, Share, Upload, Refresh } from '@element-plus/icons-vue'
+import type {FormInstance} from "element-plus";
 import {ElMessage} from 'element-plus'
 import request from "@/utils/request";
+import {formatDate} from "@/utils";
 
 const ruleFormRef = ref<FormInstance>()
 
@@ -193,8 +193,12 @@ const getReceiptList = (value, pageNumber: number, pageSize: number) => {
     "pageNumber": pageNumber,
     "pageSize": pageSize
   }).then(res => {
-    console.log('res', res.data,res);
-    tableData.value = res.data.list;
+    const list =  res.data.list
+    tableData.value = list.map((item) => ({
+      ...item,
+      endTime: formatDate(item.endTime),
+      startTime: formatDate(item.startTime),
+    }));
     totalNumber.value = res.data.total;
   })
 }

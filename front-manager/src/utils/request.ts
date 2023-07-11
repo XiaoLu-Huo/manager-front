@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getToken} from "@/utils/token";
+import {getToken, removeToken} from "@/utils/token";
 import router from "@/router";
 import {ElMessage} from "element-plus";
 
@@ -19,14 +19,16 @@ request.interceptors.request.use(config => {
 })
 
 request.interceptors.response.use(response => {
-    let res = response
-    if (res.status === '400') {
+    return response;
+}, error => {
+    console.log("error",error.response.status)
+    if (error.response.status === 401) {
         // 跳转到登陆页面
         ElMessage.error("token不存在或已失效，请重新登陆")
-        router.push("/")
+        removeToken()
+        // router.push({name:'home'})
+        window.location.href='/';
     }
-    return res
-}, error => {
     console.log('response error: ' + error) // for error debug
     return Promise.reject(error)
 })

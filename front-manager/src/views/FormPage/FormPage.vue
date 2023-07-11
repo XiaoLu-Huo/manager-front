@@ -55,7 +55,7 @@ const handleClose = (key: string, keyPath: string[]) => {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .common-layout {
   width: 100%;
   height: 100vh;

@@ -28,15 +28,18 @@
               status-icon
           >
             <el-form-item label="用户名" prop="userName">
-              <el-input class="name-password" v-model="ruleForm.userName"/>
+              <el-input class="name-password" v-model="ruleForm.userName" clearable/>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-              <el-input class="name-password" v-model="ruleForm.password"/>
+              <el-input class="name-password" v-model="ruleForm.password" clearable/>
             </el-form-item>
             <el-form-item>
               <el-button class="name-password" type="primary" @click="submitForm(ruleFormRef)">
-                Login
+                登陆
               </el-button>
+<!--              <el-button class="name-password" type="primary" @click="resetForm(ruleFormRef)">-->
+<!--                重置-->
+<!--              </el-button>-->
             </el-form-item>
           </el-form>
         </el-main>
@@ -56,6 +59,7 @@ import axios from "axios";
 import request from "@/utils/request";
 import {ElMessage} from "element-plus";
 import {setToken} from "@/utils/token";
+import {formatDate} from "@/utils";
 const router = useRouter();
 
 interface RuleForm {
@@ -89,6 +93,11 @@ const carouselData = ref([{
 }
 ]);
 
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
+
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
@@ -120,7 +129,7 @@ const options = Array.from({length: 10000}).map((_, idx) => ({
 }))
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped >
 .common-layout {
   width: 100%;
   height: 100vh;
