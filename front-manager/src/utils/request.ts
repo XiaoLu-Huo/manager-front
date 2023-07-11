@@ -1,6 +1,7 @@
 import axios from "axios";
 import {getToken} from "@/utils/token";
 import router from "@/router";
+import {ElMessage} from "element-plus";
 
 const request = axios.create({
     baseURL: 'http://localhost:8080',
@@ -19,12 +20,14 @@ request.interceptors.request.use(config => {
 
 request.interceptors.response.use(response => {
     let res = response
-    //  res.code
+    if (res.status === '400') {
+        // 跳转到登陆页面
+        ElMessage.error("token不存在或已失效，请重新登陆")
+        router.push("/")
+    }
     return res
 }, error => {
     console.log('response error: ' + error) // for error debug
-    // 跳转到登陆页面
-    router.push("/")
     return Promise.reject(error)
 })
 
